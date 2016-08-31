@@ -39,3 +39,18 @@ func NewBitmapFromImage(img image.Image) *Bitmap {
 
 	return &bmp
 }
+
+// allZeroes returns true if all bits are 0 in a given rectangle
+func (bmp *Bitmap) allZeroes(rect image.Rectangle) bool {
+
+	// naive implementation
+	for y := rect.Min.Y; y < rect.Max.Y; y++ {
+		for x := rect.Min.X; x < rect.Max.X; x++ {
+			if bmp.Bits[x+bmp.Width] != 0 {
+				// immediately returns at the first 1 found
+				return false
+			}
+		}
+	}
+	return true
+}
