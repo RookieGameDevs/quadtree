@@ -19,6 +19,41 @@ func check(t *testing.T, err error) {
 	}
 }
 
+func newBitmapFromStrings(ss []string) *Bitmap {
+	w, h := len(ss[0]), len(ss)
+	for i := range ss {
+		if len(ss[i]) != w {
+			panic("all strings should have the same length")
+		}
+	}
+
+	bmp := Bitmap{
+		Width:  w,
+		Height: h,
+		Bits:   make([]byte, w*h),
+	}
+
+	for y := range ss {
+		for x := range ss[y] {
+			if ss[y][x] == '1' {
+				bmp.Bits[x+w*y] = 1
+			}
+		}
+	}
+	return &bmp
+}
+
+func (bmp Bitmap) String() string {
+	var s string
+	for y := 0; y < bmp.Height; y++ {
+		for x := 0; x < bmp.Width; x++ {
+			s += fmt.Sprintf("%d", bmp.Bits[x+bmp.Width*y])
+		}
+		s += "\n"
+	}
+	return s
+}
+
 func TestBitmapFromImage(t *testing.T) {
 	gopher := []string{
 		"1111111111111000000000000001111111111111",
@@ -93,41 +128,6 @@ func TestBitmapFromImage(t *testing.T) {
 	if bmp.String() != exp {
 		t.Errorf("NewBitmapFromImage() expected gopher, didn't have one")
 	}
-}
-
-func newBitmapFromStrings(ss []string) *Bitmap {
-	w, h := len(ss[0]), len(ss)
-	for i := range ss {
-		if len(ss[i]) != w {
-			panic("all strings should have the same length")
-		}
-	}
-
-	bmp := Bitmap{
-		Width:  w,
-		Height: h,
-		Bits:   make([]byte, w*h),
-	}
-
-	for y := range ss {
-		for x := range ss[y] {
-			if ss[y][x] == '1' {
-				bmp.Bits[x+w*y] = 1
-			}
-		}
-	}
-	return &bmp
-}
-
-func (bmp Bitmap) String() string {
-	var s string
-	for y := 0; y < bmp.Height; y++ {
-		for x := 0; x < bmp.Width; x++ {
-			s += fmt.Sprintf("%d", bmp.Bits[x+bmp.Width*y])
-		}
-		s += "\n"
-	}
-	return s
 }
 
 func TestAllZeroes(t *testing.T) {
