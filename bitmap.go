@@ -11,7 +11,8 @@ type Bitmap struct {
 // NewBitmapFromImage creates a Bitmap from an image.
 //
 // Only the Red component is checked on the source image, as sources images
-// should be black and white (1 bit)
+// should be black (all color components at 0) or white (all color components
+// are 1)
 func NewBitmapFromImage(img image.Image) *Bitmap {
 	minx := img.Bounds().Min.X
 	miny := img.Bounds().Min.Y
