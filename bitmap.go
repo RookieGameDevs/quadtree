@@ -2,10 +2,23 @@ package quadtree
 
 import "image"
 
-// Bitmap is an rectangular bit array
+//go:generate stringer -type=color
+type color byte
+
+const (
+	white color = iota
+	black
+	gray
+)
+
+// Bitmap represents a rectangular 1bit color depth image.
+//
+// Though every point (or pixel) could be contained in 1bit of information as
+// it can only be black or white, the Bits array is made of byte for
+// simplicity.
 type Bitmap struct {
-	Width, Height int    // bitmap dimensions
-	Bits          []byte // bit array
+	Width, Height int     // bitmap dimensions
+	Bits          []color // rectangular color array, mapped to 1D
 }
 
 // NewBitmapFromImage creates a Bitmap from an image.
@@ -25,7 +38,7 @@ func NewBitmapFromImage(img image.Image) *Bitmap {
 	bmp := Bitmap{
 		Width:  w,
 		Height: h,
-		Bits:   make([]byte, w*h),
+		Bits:   make([]color, w*h),
 	}
 
 	b := img.Bounds()
