@@ -1,4 +1,4 @@
-package quadtree
+package bmp
 
 import (
 	"fmt"
