@@ -30,7 +30,7 @@ func newBitmapFromStrings(ss []string) *Bitmap {
 	bmp := Bitmap{
 		Width:  w,
 		Height: h,
-		Bits:   make([]color, w*h),
+		Bits:   make([]Color, w*h),
 	}
 
 	for y := range ss {

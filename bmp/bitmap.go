@@ -3,12 +3,12 @@ package bmp
 import "image"
 
 //go:generate stringer -type=color
-type color byte
+type Color byte
 
 const (
-	white color = iota
-	black
-	gray
+	White Color = iota
+	Black
+	Gray
 )
 
 // Bitmap represents a rectangular 1bit color depth image.
@@ -18,7 +18,7 @@ const (
 // simplicity.
 type Bitmap struct {
 	Width, Height int     // bitmap dimensions
-	Bits          []color // rectangular color array, mapped to 1D
+	Bits          []Color // rectangular color array, mapped to 1D
 }
 
 // NewBitmapFromImage creates a Bitmap from an image.
@@ -38,7 +38,7 @@ func NewBitmapFromImage(img image.Image) *Bitmap {
 	bmp := Bitmap{
 		Width:  w,
 		Height: h,
-		Bits:   make([]color, w*h),
+		Bits:   make([]Color, w*h),
 	}
 
 	b := img.Bounds()
