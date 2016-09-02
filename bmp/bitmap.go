@@ -2,7 +2,7 @@ package bmp
 
 import "image"
 
-//go:generate stringer -type=color
+//go:generate stringer -type=Color
 type Color byte
 
 const (
