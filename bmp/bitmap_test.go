@@ -1,7 +1,6 @@
 package bmp
 
 import (
-	"fmt"
 	"image"
 	"image/png"
 	"os"
@@ -17,41 +16,6 @@ func check(t *testing.T, err error) {
 	if err != nil {
 		t.Fatal(err)
 	}
-}
-
-func newBitmapFromStrings(ss []string) *Bitmap {
-	w, h := len(ss[0]), len(ss)
-	for i := range ss {
-		if len(ss[i]) != w {
-			panic("all strings should have the same length")
-		}
-	}
-
-	bmp := Bitmap{
-		Width:  w,
-		Height: h,
-		Bits:   make([]Color, w*h),
-	}
-
-	for y := range ss {
-		for x := range ss[y] {
-			if ss[y][x] == '1' {
-				bmp.Bits[x+w*y] = 1
-			}
-		}
-	}
-	return &bmp
-}
-
-func (bmp Bitmap) String() string {
-	var s string
-	for y := 0; y < bmp.Height; y++ {
-		for x := 0; x < bmp.Width; x++ {
-			s += fmt.Sprintf("%d", bmp.Bits[x+bmp.Width*y])
-		}
-		s += "\n"
-	}
-	return s
 }
 
 func TestBitmapFromImage(t *testing.T) {
@@ -127,34 +91,5 @@ func TestBitmapFromImage(t *testing.T) {
 	exp = strings.Join(gopher, "\n") + "\n"
 	if bmp.String() != exp {
 		t.Errorf("NewBitmapFromImage() expected gopher, didn't have one")
-	}
-}
-
-func TestAllZeroes(t *testing.T) {
-	ss := []string{
-		"000",
-		"100",
-		"011",
-	}
-
-	var zeroesTests = []struct {
-		minx, miny, maxx, maxy int
-		expected               bool
-	}{
-		{0, 0, 2, 2, false},
-		{1, 1, 2, 2, false},
-		{0, 1, 0, 1, false},
-		{0, 0, 0, 0, true},
-		{1, 0, 1, 0, true},
-		{1, 0, 2, 1, true},
-	}
-
-	bmp := newBitmapFromStrings(ss)
-
-	for _, tt := range zeroesTests {
-		actual := bmp.allZeroes(image.Point{tt.minx, tt.miny}, image.Point{tt.maxx, tt.maxy})
-		if actual != tt.expected {
-			t.Errorf("Bitmap.allZeroes() (%d,%d|%d,%d): expected %v, actual %v", tt.minx, tt.miny, tt.maxx, tt.maxy, tt.expected, actual)
-		}
 	}
 }
