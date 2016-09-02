@@ -6,8 +6,10 @@ import "image"
 type Color byte
 
 const (
-	White Color = iota
-	Black
+	Black Color = iota
+	White
+	// only for pixel regions, indicates the region contains both Black and
+	// White pixels
 	Gray
 )
 
@@ -46,7 +48,7 @@ func NewBitmapFromImage(img image.Image) *Bitmap {
 		for x := b.Min.X; x < b.Max.X; x++ {
 			r, _, _, _ := img.At(x, y).RGBA()
 			if r != 0 {
-				bmp.Bits[x+w*y] = 1
+				bmp.Bits[x+w*y] = White
 			}
 		}
 	}
