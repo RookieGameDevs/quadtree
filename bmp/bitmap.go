@@ -13,11 +13,11 @@ const (
 	Gray
 )
 
-// Bitmap represents a rectangular 1bit color depth image.
+// Bitmap represents a rectangular image with a color depth of 1 bit.
 //
-// Though every point (or pixel) could be contained in 1bit of information as
-// it can only be black or white, the Bits array is made of byte for
-// simplicity.
+// Though every pixel could be contained in 1bit of information, for simplicity
+// Bits is a slice of Color (1 byte integer that can take only two values:
+// Black and White.
 type Bitmap struct {
 	Width, Height int     // bitmap dimensions
 	Bits          []Color // rectangular color array, mapped to 1D
@@ -25,9 +25,9 @@ type Bitmap struct {
 
 // NewBitmapFromImage creates a Bitmap from an image.
 //
-// Only the Red component is checked on the source image, as sources images
-// should be black (all color components at 0) or white (all color components
-// are 1)
+// The source image should be black and white, i.e pixels component (RGB)
+// should all have the same values. That's why we only check the Red component
+// of the source image in order to determine if the pixel is Black or White
 func NewBitmapFromImage(img image.Image) *Bitmap {
 	minx := img.Bounds().Min.X
 	miny := img.Bounds().Min.Y
@@ -54,19 +54,4 @@ func NewBitmapFromImage(img image.Image) *Bitmap {
 	}
 
 	return &bmp
-}
-
-// allZeroes returns true if all bits are 0 in a given rectangle
-func (bmp *Bitmap) allZeroes(topLeft, bottomRight image.Point) bool {
-
-	// naive implementation
-	for y := topLeft.Y; y <= bottomRight.Y; y++ {
-		for x := topLeft.X; x <= bottomRight.X; x++ {
-			if bmp.Bits[x+bmp.Width*y] != 0 {
-				// immediately returns at the first 1 found
-				return false
-			}
-		}
-	}
-	return true
 }
