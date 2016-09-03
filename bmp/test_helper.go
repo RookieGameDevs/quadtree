@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func newBitmapFromStrings(ss []string) *Bitmap {
+func NewBitmapFromStrings(ss []string) *Bitmap {
 	w, h := len(ss[0]), len(ss)
 	for i := range ss {
 		if len(ss[i]) != w {

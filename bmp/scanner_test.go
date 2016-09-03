@@ -25,7 +25,7 @@ func TestNaiveScannerIsWhite(t *testing.T) {
 		{1, 2, 2, 2, true},
 	}
 
-	bmp := newBitmapFromStrings(ss)
+	bmp := NewBitmapFromStrings(ss)
 	var scanner NaiveScanner
 
 	for _, tt := range testTbl {
@@ -57,7 +57,7 @@ func TestNaiveScannerIsBlack(t *testing.T) {
 		{2, 2, 2, 2, true},
 	}
 
-	bmp := newBitmapFromStrings(ss)
+	bmp := NewBitmapFromStrings(ss)
 	var scanner NaiveScanner
 
 	for _, tt := range testTbl {
@@ -86,7 +86,7 @@ func TestNaiveScannerFilled(t *testing.T) {
 		{1, 0, 2, 1, White},
 	}
 
-	bmp := newBitmapFromStrings(ss)
+	bmp := NewBitmapFromStrings(ss)
 	var scanner NaiveScanner
 
 	for _, tt := range testTbl {
