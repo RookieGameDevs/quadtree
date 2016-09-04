@@ -1,7 +1,6 @@
-package quadtree
+package bmp
 
 import (
-	"fmt"
 	"image"
 	"image/png"
 	"os"
@@ -20,27 +19,7 @@ func check(t *testing.T, err error) {
 }
 
 func TestBitmapFromImage(t *testing.T) {
-	f, err := os.Open(testdata + "/gopher.png")
-	check(t, err)
-	defer f.Close()
-
-	var (
-		img image.Image
-		bmp *Bitmap
-		s   string
-	)
-	img, err = png.Decode(f)
-	check(t, err)
-
-	bmp = NewBitmapFromImage(img)
-
-	for y := 0; y < bmp.Height; y++ {
-		for x := 0; x < bmp.Width; x++ {
-			s += fmt.Sprintf("%d", bmp.Bits[x+bmp.Width*y])
-		}
-	}
-
-	expected := []string{
+	gopher := []string{
 		"1111111111111000000000000001111111111111",
 		"1111111111100000011111111000011111011111",
 		"1111001100011111111111110001100000000111",
@@ -96,7 +75,45 @@ func TestBitmapFromImage(t *testing.T) {
 		"1111100100100000000000000000111101011111",
 		"1111101011111111000000011111111100011111"}
 
-	if s != strings.Join(expected, "") {
-		t.Errorf("NewBitmapFromImage() expected gopher, didn't have one")
+	f, err := os.Open(testdata + "/gopher.png")
+	check(t, err)
+	defer f.Close()
+
+	var (
+		img image.Image
+		bmp *Bitmap
+		exp string
+	)
+	img, err = png.Decode(f)
+	check(t, err)
+
+	bmp = NewFromImage(img)
+	exp = strings.Join(gopher, "\n") + "\n"
+	if bmp.String() != exp {
+		t.Errorf("NewFromImage() expected gopher, didn't have one")
+	}
+}
+
+func TestBlackImage(t *testing.T) {
+	var testTbl = []struct {
+		w, h                   int
+		minx, miny, maxx, maxy int
+	}{
+		{2, 2, 0, 0, 1, 1},
+		{1, 2, 0, 0, 0, 1},
+		{2, 1, 0, 0, 1, 0},
+		{4, 2, 0, 0, 3, 1},
+		{4, 2, 2, 2, 3, 1},
+		{2, 4, 0, 0, 1, 3},
+		{2, 4, 2, 2, 1, 3},
+	}
+
+	var scanner NaiveScanner
+
+	for _, tt := range testTbl {
+		bmp := New(tt.w, tt.h)
+		if !scanner.IsBlack(bmp, image.Point{tt.minx, tt.miny}, image.Point{tt.maxx, tt.maxy}) {
+			t.Errorf("TestBlackImage (dim:%dx%d)(%d,%d|%d,%d): expected true, got false", tt.w, tt.h, tt.minx, tt.miny, tt.maxx, tt.maxy)
+		}
 	}
 }
